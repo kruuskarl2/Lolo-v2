@@ -1,6 +1,6 @@
 <template>
     <div class="rss-list">
-        <div class="no-feeds">You haven't added any feeds yet. Use the button at the bottom of the sidebar to add a new feed.</div>
+        <div class="no-feeds">You haven't added any feeds yet.</div>
     </div>
 </template>
 

@@ -6,7 +6,7 @@
             <h1 class="site-title-text">Lolo v2</h1>
         </div>
         <div class="rss-list-container"><RssList/></div>
-        <div id="add-rss-feed-btn">
+        <div class="add-rss-feed-btn">
             <font-awesome-icon icon="plus-square"/>
             Add a new feed
         </div>
@@ -38,7 +38,6 @@ export default {
 }
 
 .site-title {
-    color: var(--accent-lighter);
     margin: 0 0 20px;
     text-align: center;
 }
@@ -56,7 +55,7 @@ export default {
     padding: 10px 0 0
 }
 
-#add-rss-feed-btn {
+.add-rss-feed-btn {
     background-color: var(--accent-color);
     text-align: center;
     font-size: 20px;
@@ -67,7 +66,7 @@ export default {
     padding: 10px 0;
 }
 
-#add-rss-feed-btn:hover {
+.add-rss-feed-btn:hover {
     background-color: var(--accent-lighter);
 }
 

@@ -4,11 +4,11 @@
         <div class="modal">
             <h1 class="new-feed-label">New Feed</h1>
             <h4 class="input-label">Custom Name (optional)</h4>
-            <input type="text" id="input-name">
+            <input type="text">
             <h4 class="input-label">RSS Feed URL</h4>
-            <input type="text" id="input-url">
+            <input type="text" v-model="rssFeed">
             <div class="buttons">
-                <div class="add-button button">Add feed</div>
+                <div class="add-button button" v-on:click="addFeed">Add feed</div>
                 <div class="cancel-button button">Cancel</div>
             </div>
         </div>
@@ -17,7 +17,17 @@
 
 <script>
 export default {
-  name: 'NewFeedModal',
+    name: 'NewFeedModal',
+    data: function() {
+        return {
+            rssFeed: ""
+        }
+    },
+    methods: {
+        addFeed: function () {
+            this.$store.commit('addFeed', { url: this.rssFeed});
+        }
+    },
 }
 </script>
 

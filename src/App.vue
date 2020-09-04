@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
-    <SideBar/>
-    <div class="content-container">
-        <ArticleBrowser/>
+    <div id="app">
+        <SideBar/>
+        <div class="content-container">
+            <ArticleBrowser/>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -12,23 +12,23 @@ import SideBar from './components/SideBar.vue'
 import ArticleBrowser from './components/ArticleBrowser.vue'
 
 export default {
-  name: 'App',
-  components: {
-    SideBar,
-    ArticleBrowser
-  }
+    name: 'App',
+    components: {
+        SideBar,
+        ArticleBrowser
+    }
 }
 </script>
 
 <style>
 :root {
-  --accent-color: #469c36;
-  --accent-lighter: #4ab037;
-  --dark-bgcolor: #525252;
-  --light-bgcolor: white;
-  --dark-accent: #242424;
-  --error-color: #c21010;
-  --error-lighter: #e31717
+    --accent-color: #469c36;
+    --accent-lighter: #4ab037;
+    --dark-bgcolor: #525252;
+    --light-bgcolor: white;
+    --dark-accent: #242424;
+    --error-color: #c21010;
+    --error-lighter: #e31717
 }
 
 body {

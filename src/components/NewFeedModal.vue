@@ -26,14 +26,17 @@ export default {
     },
     methods: {
         addFeed: function () {
+            if (this.rssFeed == "") return;
             this.$store.commit('addFeed', { url: this.rssFeed});
+            this.closeModal();
         },
         closeModal: function () {
             this.showModal = false;
+            this.rssFeed = "";
         }
     },
     mounted: function () {
-        this.$root.$on('setAddFeedModal', (show) => { // here you need to use the arrow function
+        this.$root.$on('setAddFeedModal', (show) => {
             this.showModal = show;
         })
     }

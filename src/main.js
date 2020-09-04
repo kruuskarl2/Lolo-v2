@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusSquare, faRss, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Vuex from 'vuex'
 
 library.add(faPlusSquare)
 library.add(faRss);
 library.add(faTrashAlt);
+library.add(faBook);
+library.add(faSpinner);
 
 Vue.use(Vuex)
 

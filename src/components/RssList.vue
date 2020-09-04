@@ -1,5 +1,6 @@
 <template>
     <div class="rss-list">
+        <div class="no-feeds">You haven't added any feeds yet. Use the button at the bottom of the sidebar to add a new feed.</div>
     </div>
 </template>
 
@@ -13,5 +14,10 @@ export default {
 .rss-list {
     background-color: var(--dark-accent);
     height: 100%;
+    padding: 10px;
+}
+
+.no-feeds {
+    color: lightgray;
 }
 </style>

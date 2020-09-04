@@ -10,16 +10,19 @@
             <font-awesome-icon icon="plus-square"/>
             Add a new feed
         </div>
+        <NewFeedModal/>
     </div>
 </template>
 
 <script>
 import RssList from './RssList.vue'
+import NewFeedModal from './NewFeedModal'
 
 export default {
   name: 'SideBar',
   components: {
-    RssList
+    RssList,
+    NewFeedModal
   }
 }
 </script>
@@ -30,6 +33,8 @@ export default {
     width: 300px;
     height: 100vh;
     color: var(--light-bgcolor);
+    user-select: none;
+    position: absolute;
 }
 
 .site-title {
@@ -60,7 +65,6 @@ export default {
     bottom: 0;
     width: 300px;
     padding: 10px 0;
-    user-select: none;
 }
 
 #add-rss-feed-btn:hover {

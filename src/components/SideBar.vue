@@ -6,7 +6,7 @@
             <h1 class="site-title-text">Lolo v2</h1>
         </div>
         <div class="rss-list-container"><RssList/></div>
-        <div class="add-rss-feed-btn">
+        <div class="add-rss-feed-btn" v-on:click="openAddFeedModal">
             <font-awesome-icon icon="plus-square"/>
             Add a new feed
         </div>
@@ -19,11 +19,16 @@ import RssList from './RssList.vue'
 import NewFeedModal from './NewFeedModal'
 
 export default {
-  name: 'SideBar',
-  components: {
-    RssList,
-    NewFeedModal
-  }
+    name: 'SideBar',
+    components: {
+        RssList,
+        NewFeedModal
+    },
+    methods: {
+        openAddFeedModal: function () {
+            this.$root.$emit('setAddFeedModal', true);
+        }
+    }
 }
 </script>
 

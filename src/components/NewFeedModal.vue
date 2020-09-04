@@ -1,5 +1,5 @@
 <template>
-    <div class="new-feed-modal">
+    <div v-if="showModal" class="new-feed-modal">
         <div class="modal-overlay"></div>
         <div class="modal">
             <h1 class="new-feed-label">New Feed</h1>
@@ -9,7 +9,7 @@
             <input type="text" v-model="rssFeed">
             <div class="buttons">
                 <div class="add-button button" v-on:click="addFeed">Add feed</div>
-                <div class="cancel-button button">Cancel</div>
+                <div class="cancel-button button" v-on:click="closeModal">Cancel</div>
             </div>
         </div>
     </div>
@@ -20,14 +20,23 @@ export default {
     name: 'NewFeedModal',
     data: function() {
         return {
-            rssFeed: ""
+            rssFeed: "",
+            showModal: false
         }
     },
     methods: {
         addFeed: function () {
             this.$store.commit('addFeed', { url: this.rssFeed});
+        },
+        closeModal: function () {
+            this.showModal = false;
         }
     },
+    mounted: function () {
+        this.$root.$on('setAddFeedModal', (show) => { // here you need to use the arrow function
+            this.showModal = show;
+        })
+    }
 }
 </script>
 

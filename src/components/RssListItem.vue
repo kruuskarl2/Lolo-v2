@@ -10,35 +10,7 @@
 <script>
 export default {
     name: 'RssListItem',
-    props: ['name', 'url'],
-    data: function () {
-        return {
-            articleCount: undefined
-        }
-    },
-    methods: {
-        getArticleCount: function (proxyUrl = "") {
-            // proxyUrl must be used to bypass CORS
-            fetch(proxyUrl + this.url)
-                .then(response => response.text())
-                .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-                .then(data => {
-                    console.log(data);
-                    var items = data.querySelectorAll("item");
-                    this.articleCount = items.length;
-                }).catch(error => {
-                    // Try to parse the feed again, using the proxy to bypass CORS
-                    if (proxyUrl == "") { 
-                        this.getArticleCount('https://cors-anywhere.herokuapp.com/');
-                        return;
-                    }
-                    console.log("Failed to parse feed: " + error);
-                });
-        }
-    },
-    mounted: function () {
-        this.getArticleCount();
-    }
+    props: ['name', 'url', 'articleCount']
 }
 </script>
 
@@ -47,7 +19,7 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: row;
-    padding: 10px 0;
+    padding: 5px 0;
     transition: 0.3s;
 }
 

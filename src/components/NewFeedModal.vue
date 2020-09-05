@@ -4,7 +4,7 @@
         <div class="modal">
             <h1 class="new-feed-label">New Feed</h1>
             <h4 class="input-label">Custom Name (optional)</h4>
-            <input type="text">
+            <input type="text" v-model="customName">
             <h4 class="input-label">RSS Feed URL</h4>
             <input type="text" v-model="rssFeed">
             <div class="buttons">
@@ -21,13 +21,18 @@ export default {
     data: function() {
         return {
             rssFeed: "",
-            showModal: false
+            showModal: false,
+            customName: ""
         }
     },
     methods: {
         addFeed: function () {
             if (this.rssFeed == "") return;
-            this.$store.commit('addFeed', { url: this.rssFeed});
+            var name;
+            if (this.customName != "") name = this.customName;
+
+            this.$store.dispatch('addFeedUsingProxy', { url: this.rssFeed, name});
+            
             this.closeModal();
         },
         closeModal: function () {

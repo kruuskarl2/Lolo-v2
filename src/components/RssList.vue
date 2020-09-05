@@ -1,7 +1,12 @@
 <template>
     <div class="rss-list">
         <div v-if="feedsExist">
-            <RssListItem v-for="feed in feedList" v-bind:key="feed.name" v-bind:name="feed.name" v-bind:url="feed.url"/>
+            <RssListItem 
+                v-for="(feed, index) in feedList" 
+                v-bind:key="index" 
+                v-bind:name="feed.name" 
+                v-bind:url="feed.url" 
+                v-bind:articleCount="feed.items.length"/>
         </div>
         <div v-else class="no-feeds">You haven't added any feeds yet.</div>
     </div>

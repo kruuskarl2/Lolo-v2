@@ -3,6 +3,7 @@
         <SideBar/>
         <div class="content-container">
             <ArticleBrowser/>
+            <ArticleReader/>
         </div>
     </div>
 </template>
@@ -10,12 +11,14 @@
 <script>
 import SideBar from './components/SideBar.vue'
 import ArticleBrowser from './components/ArticleBrowser.vue'
+import ArticleReader from './components/ArticleReader.vue';
 
 export default {
     name: 'App',
     components: {
         SideBar,
-        ArticleBrowser
+        ArticleBrowser,
+        ArticleReader
     }
 }
 </script>
@@ -44,6 +47,7 @@ input {
 
 .content-container {
     display: flex;
-    margin: 0 0 0 300px
+    flex-direction: row;
+    margin: 0 0 0 300px;
 }
 </style>

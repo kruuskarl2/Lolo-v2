@@ -1,6 +1,6 @@
 <template>
-    <div class="article">
-        <div class="image"><img v-bind:src="articleImage"/></div>
+    <div class="article" v-on:click="selectArticle" v-bind:class="{ selected: isSelected}">
+        <div class="image"><img v-if="articleImage" v-bind:src="articleImage"/><font-awesome-icon v-else icon="rss"/></div>
         <div class="text-content">
             <h4 class="title">{{ articleTitle || "Untitled Article" }}</h4>
             <p class="desc">{{ articleDescription }}</p>
@@ -9,22 +9,32 @@
 </template>
 
 <script>
+
+
 export default {
     name: 'Article',
-    props: ['article'],
+    props: ['article', 'index'],
+    methods: {
+        selectArticle() {
+            this.$store.commit("selectArticle", { index: this.index });
+        }
+    },
     computed: {
         articleTitle: function() {
-            return this.article.querySelector("title").innerHTML;
+            return this.article.title;
         },
         articleImage: function() {
-            // Find the first url in the article and use that as the image
-            var imgURL = this.article.innerHTML.toString().split('url="')[1].split('"')[0];
-            console.log(imgURL);
-            return imgURL;
+            return this.article.lead_image_url;
         },
         articleDescription: function() {
-            return this.article.querySelector("description").innerHTML;
+            return this.article.excerpt;
+        },
+        isSelected() {
+            return (this.index == this.$store.state.selectedArticleIndex);
         }
+    },
+    mounted: function() {
+        console.log(this.article);
     }
 }
 </script>
@@ -40,6 +50,9 @@ export default {
     transition: 0.2s;
 }
 .article:hover {
+    background-color: var(--accent-color);
+}
+.selected {
     background-color: var(--accent-color);
 }
 .image {
@@ -58,5 +71,8 @@ img {
 }
 .title {
     margin: 0;
+}
+.fa-rss {
+    font-size: 100px;
 }
 </style>

@@ -13,7 +13,8 @@
             <Article 
                 v-for="(article, index) in selectedFeed.items" 
                 v-bind:article="article" 
-                v-bind:key="index"/>
+                v-bind:key="index"
+                v-bind:index="index"/>
         </div>
         <div class="no-feed-selected" v-else>You haven't opened any feeds yet.</div>
     </div>
@@ -45,9 +46,10 @@ export default {
 <style scoped>
 .article-browser {
     width: 100%;
-    height: 100vh;
+    height: 99vh;
     color: var(--dark-accent);
     user-select: none;
+    flex-grow: 1;
 }
 .nav-bar {
     display: flex;

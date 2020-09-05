@@ -1,11 +1,12 @@
-import Vue from 'vue'
-import App from './App.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import App from './App.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import Vuex from 'vuex';
+import Mercury from "@postlight/mercury-parser";
 
-library.add(faPlusSquare)
+library.add(faPlusSquare);
 library.add(faRss);
 library.add(faTrashAlt);
 library.add(faBook);
@@ -18,18 +19,31 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
       feedList: [],
-      selectedFeedIndex: 0
+      selectedFeedIndex: 0,
+      selectedArticleIndex: null
     },
     mutations: {
         selectFeed(state, { index }) {
-            if (!index) return;
+            if (index == undefined) return;
             state.selectedFeedIndex = index;
+        },
+        selectArticle(state, { index }) {
+            if (index == undefined) return;
+            if (state.selectedArticleIndex == index) index = null;
+            state.selectedArticleIndex = index;
+            console.log(state.selectedArticleIndex);
         }
     },
     getters: {
         selectedFeed: state => {
             var selectedIndex = state.selectedFeedIndex;
             return state.feedList[selectedIndex];
+        },
+        selectedArticle: state => {
+            var selectedFeedIndex = state.selectedFeedIndex;
+            var selectedFeed = state.feedList[selectedFeedIndex];
+            var selectedArticleIndex = state.selectedArticleIndex;
+            return selectedFeed.items[selectedArticleIndex];
         }
     },
     actions: {
@@ -41,22 +55,29 @@ const store = new Vuex.Store({
                 .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
                 .then(data => {
                     var nameFromFeed = data.querySelector("title").innerHTML;
-                    console.log(nameFromFeed);
                     if (name=="Unnamed feed") name = nameFromFeed;
 
+                    var parsedItems = [];
                     var items = data.querySelectorAll("item");
-
-                    state.feedList.push({
-                        name, 
-                        url, 
-                        items
-                    });
-                    
-                    console.log("feed added");
-                    console.log(state.feedList);
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        var articleLink = item.querySelector('link').innerHTML;
+                        Mercury.parse('https://hidden-ocean-65163.herokuapp.com/' + articleLink).then(result => {
+                            parsedItems.push(result);
+                            if (parsedItems.length == items.length) {
+                                // When all the articles have been parsed, add the new feed
+                                state.feedList.push({
+                                    name, 
+                                    url, 
+                                    items: parsedItems
+                                });
+                            }
+                        });
+                    }
                 }).catch(error => {
                     // Try to parse the feed again, using the proxy to bypass CORS
-                    if (proxyUrl == "") { 
+                    if (proxyUrl == "") {
+                        console.log('Failed to fetch rss feed without proxy. Trying to fetch with proxy...');
                         context.dispatch("addFeedUsingProxy", {
                             url,
                             name,

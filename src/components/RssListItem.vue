@@ -1,5 +1,5 @@
 <template>
-    <div class="rss-list-item">
+    <div class="rss-list-item" v-bind:class="{ selected: isSelected }" v-on:click="selectThisFeed">
         <div class="feed-name">
             <font-awesome-icon icon="book"/>&nbsp;{{ name }}
         </div>
@@ -10,7 +10,17 @@
 <script>
 export default {
     name: 'RssListItem',
-    props: ['name', 'url', 'articleCount']
+    props: ['name', 'url', 'articleCount', 'index'],
+    computed: {
+        isSelected: function () {
+            return (this.$store.state.selectedFeedIndex == this.index);
+        }
+    },
+    methods: {
+        selectThisFeed: function () {
+            this.$store.commit("selectFeed", { index: this.index });
+        }
+    }
 }
 </script>
 
@@ -24,6 +34,10 @@ export default {
 }
 
 .rss-list-item:hover {
+    background-color: var(--accent-color);
+}
+
+.selected {
     background-color: var(--accent-color);
 }
 

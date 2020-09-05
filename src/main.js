@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Vuex from 'vuex'
 
@@ -10,12 +10,27 @@ library.add(faRss);
 library.add(faTrashAlt);
 library.add(faBook);
 library.add(faSpinner);
+library.add(faWindowClose);
+library.add(faCheckSquare);
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-      feedList: []
+      feedList: [],
+      selectedFeedIndex: 0
+    },
+    mutations: {
+        selectFeed(state, { index }) {
+            if (!index) return;
+            state.selectedFeedIndex = index;
+        }
+    },
+    getters: {
+        selectedFeed: state => {
+            var selectedIndex = state.selectedFeedIndex;
+            return state.feedList[selectedIndex];
+        }
     },
     actions: {
         addFeedUsingProxy(context, { url, name="Unnamed feed", proxyUrl="" }) {

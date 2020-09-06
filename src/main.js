@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare, faMinus, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare, faMinus, faRedo, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vuex from 'vuex';
 import Mercury from "@postlight/mercury-parser";
@@ -15,6 +15,7 @@ library.add(faWindowClose);
 library.add(faCheckSquare);
 library.add(faMinus);
 library.add(faRedo);
+library.add(faLink);
 
 Vue.use(Vuex)
 
@@ -78,7 +79,13 @@ const store = new Vuex.Store({
             var selectedFeedIndex = state.selectedFeedIndex;
             var selectedFeed = state.feedList[selectedFeedIndex];
             var selectedArticleIndex = state.selectedArticleIndex;
-            return selectedFeed.items[selectedArticleIndex];
+            var selectedCategory = state.selectedCategory;
+            if (state.selectedCategory === null) return selectedFeed.items[selectedArticleIndex];
+            var filteredArticles = [];
+            selectedFeed.items.forEach(article => {
+                if (article.category == selectedCategory) filteredArticles.push(article);
+            });
+            return filteredArticles[selectedArticleIndex];
         }
     },
     actions: {

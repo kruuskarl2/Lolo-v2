@@ -2,7 +2,10 @@
     <div class="article" v-on:click="selectArticle" v-bind:class="{ selected: isSelected}">
         <div class="image"><img v-if="articleImage" v-bind:src="articleImage"/><font-awesome-icon v-else icon="rss"/></div>
         <div class="text-content">
-            <h4 class="title">{{ articleTitle || "Untitled Article" }}</h4>
+            <h4 class="title">
+                {{ articleTitle || "Untitled Article" }}
+                <font-awesome-icon icon="link" v-on:click="openArticle"/>
+            </h4>
             <p class="desc">{{ articleDescription }}</p>
             <div class="article-details">
                 <p class="date">Date: {{ articleDate }}</p>
@@ -20,6 +23,9 @@ export default {
     methods: {
         selectArticle() {
             this.$store.commit("selectArticle", { index: this.index });
+        },
+        openArticle: function() {
+            window.open(this.article.url, "_blank");
         }
     },
     computed: {
@@ -32,7 +38,7 @@ export default {
         articleDescription: function() {
             return this.article.excerpt;
         },
-        isSelected() {
+        isSelected: function() {
             return (this.index == this.$store.state.selectedArticleIndex);
         },
         articleDate: function() {
@@ -70,7 +76,7 @@ export default {
     text-align: center;
 }
 img {
-    height: 100%;
+    max-width: 200px;
 }
 .text-content {
     flex-grow: 10;
@@ -84,5 +90,9 @@ img {
 }
 .article-details {
     font-size: 13px;
+}
+.fa-link {
+    background-color: var(--black-bgcolor);
+    color: var(--white-bgcolor);
 }
 </style>

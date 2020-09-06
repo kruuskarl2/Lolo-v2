@@ -1,7 +1,7 @@
 <template>
     <div class="article-reader" v-bind:class="{ open: articleIsSelected }">
         <div class="article-wrapper">
-            <span v-if="articleIsSelected" class="article-content" v-html="articleContent"></span>
+            <div v-if="articleIsSelected" class="article-content" v-html="articleContent"></div>
         </div>
     </div>
 </template>
@@ -27,12 +27,11 @@ export default {
 
 <style scoped>
 .article-reader {
-    border: 1px solid black;
     transition: 0.5s;
     flex-grow: 1;
     width: 0;
     overflow: auto;
-    height: 98vh;
+    height: 100vh;
 }
 
 .article-wrapper {
@@ -41,5 +40,14 @@ export default {
 
 .open {
     width: 100%;
+}
+
+.article-content {
+    margin: 15px;
+}
+
+.article-content >>> img {
+    max-width: 100% !important;
+    text-align: center;
 }
 </style>

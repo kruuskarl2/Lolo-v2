@@ -5,7 +5,7 @@
             <input type="text" class="rss-url" v-bind:value="feedURL">&nbsp;
             <font-awesome-icon class="nav-bar-icon" icon="window-close"/>
             <font-awesome-icon class="nav-bar-icon" icon="check-square"/>
-            <font-awesome-icon class="nav-bar-icon" icon="redo"/>
+            <font-awesome-icon class="nav-bar-icon" icon="redo" v-on:click="refresh"/>
             <font-awesome-icon class="nav-bar-icon" icon="trash-alt"/>
         </div>
         <div class="articles" v-if="selectedFeed">
@@ -28,6 +28,15 @@ export default {
     name: 'ArticleBrowser',
     components: {
         Article
+    },
+    methods: {
+        refresh: function() {
+            var feed = this.$store.getters.selectedFeed;
+            var feeds = this.$store.state.feedList;
+            var index = feeds.findIndex((arrFeed) => { return arrFeed === feed; });
+            console.log(index);
+            this.$store.dispatch('addFeedUsingProxy', { url: feed.url, name: feed.name, atIndex: index});
+        }
     },
     computed: {
         feedTitle: function () {
@@ -103,5 +112,8 @@ export default {
 }
 .feedName {
     margin: 0 0 0 10px;
+}
+.fa-redo:hover {
+    color: var(--accent-color);
 }
 </style>

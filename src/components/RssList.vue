@@ -41,7 +41,6 @@ export default {
 <style scoped>
 .rss-list {
     background-color: var(--dark-accent);
-    height: 100%;
 }
 
 .no-feeds {

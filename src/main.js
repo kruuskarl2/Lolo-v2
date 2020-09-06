@@ -66,8 +66,9 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        addFeedUsingProxy(context, { url, name="Unnamed feed", proxyUrl="" }) {
+        addFeedUsingProxy(context, { url, name="Unnamed feed", proxyUrl="", atIndex }) {
             var state = context.state;
+            console.log(atIndex);
             // proxyUrl must be used to bypass CORS: https://medium.com/@dtkatz/3-ways-to-fix-the-cors-error-and-how-access-control-allow-origin-works-d97d55946d9
             fetch(proxyUrl + url)
                 .then(response => response.text())
@@ -111,12 +112,14 @@ const store = new Vuex.Store({
                                     return bDate - aDate;
                                 });
                                 // When all the articles have been parsed and sorted, add the new feed
-                                state.feedList.push({
+                                var newFeed = {
                                     name, 
                                     url, 
                                     items: sortedItems,
                                     categories
-                                });
+                                };
+                                if (atIndex !== undefined) state.feedList[atIndex] = newFeed;
+                                else state.feedList.push(newFeed);
                                 localStorage.setItem('feedList', JSON.stringify(state.feedList));
                             }
                         });
@@ -128,7 +131,8 @@ const store = new Vuex.Store({
                         context.dispatch("addFeedUsingProxy", {
                             url,
                             name,
-                            proxyUrl: corsProxy
+                            proxyUrl: corsProxy,
+                            atIndex
                         });
                         return;
                     }

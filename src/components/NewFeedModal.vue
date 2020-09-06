@@ -59,7 +59,7 @@ export default {
     width: 100vw;
     height: 100vh;
     background-color: black;
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .modal {

@@ -32,7 +32,15 @@ const store = new Vuex.Store({
             if (state.selectedArticleIndex == index) index = null;
             state.selectedArticleIndex = index;
             console.log(state.selectedArticleIndex);
-        }
+        },
+        initialiseStore(state) {
+            var storedFeedListStr = localStorage.getItem('feedList');
+            if (storedFeedListStr) {
+                var storedFeedList = JSON.parse(storedFeedListStr);
+                state.feedList = storedFeedList;
+                console.log(storedFeedList);
+            }
+        },
     },
     getters: {
         selectedFeed: state => {
@@ -71,6 +79,7 @@ const store = new Vuex.Store({
                                     url, 
                                     items: parsedItems
                                 });
+                                localStorage.setItem('feedList', JSON.stringify(state.feedList));
                             }
                         });
                     }
@@ -97,5 +106,6 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
-  store
+  store,
+  beforeCreate() { this.$store.commit('initialiseStore');},
 }).$mount('#app')

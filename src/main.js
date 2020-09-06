@@ -23,12 +23,12 @@ const corsProxy = 'https://hidden-ocean-65163.herokuapp.com/';
 
 const store = new Vuex.Store({
     state: {
-      feedList: [],
-      selectedFeedIndex: 0,
-      selectedArticleIndex: null,
-      selectedCategory: null,
-      isLoading: false,
-      loadingMessage: ''
+        feedList: [],
+        selectedFeedIndex: 0,
+        selectedArticleIndex: null,
+        selectedCategory: null,
+        isLoading: false,
+        loadingMessage: ''
     },
     mutations: {
         selectFeed(state, { index }) {

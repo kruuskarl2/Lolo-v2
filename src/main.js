@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare, faRss, faTrashAlt, faBook, faSpinner, faWindowClose, faCheckSquare, faMinus, faRedo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vuex from 'vuex';
 import Mercury from "@postlight/mercury-parser";
@@ -13,25 +13,31 @@ library.add(faBook);
 library.add(faSpinner);
 library.add(faWindowClose);
 library.add(faCheckSquare);
+library.add(faMinus);
+library.add(faRedo);
 
 Vue.use(Vuex)
+
+const corsProxy = 'https://hidden-ocean-65163.herokuapp.com/';
 
 const store = new Vuex.Store({
     state: {
       feedList: [],
       selectedFeedIndex: 0,
-      selectedArticleIndex: null
+      selectedArticleIndex: null,
+      selectedCategory: null
     },
     mutations: {
         selectFeed(state, { index }) {
             if (index == undefined) return;
             state.selectedFeedIndex = index;
+            state.selectedCategory = null;
+            state.selectedArticleIndex = null;
         },
         selectArticle(state, { index }) {
             if (index == undefined) return;
             if (state.selectedArticleIndex == index) index = null;
             state.selectedArticleIndex = index;
-            console.log(state.selectedArticleIndex);
         },
         initialiseStore(state) {
             var storedFeedListStr = localStorage.getItem('feedList');
@@ -41,6 +47,11 @@ const store = new Vuex.Store({
                 console.log(storedFeedList);
             }
         },
+        selectCategory(state, { category }) {
+            if (category == undefined) return;
+            state.selectedCategory = category;
+            state.selectedArticleIndex = null;
+        }
     },
     getters: {
         selectedFeed: state => {
@@ -66,12 +77,32 @@ const store = new Vuex.Store({
                     if (name=="Unnamed feed") name = nameFromFeed;
 
                     var parsedItems = [];
+                    var categoryLinkPairs = {};
+                    var categories = [];
                     var items = data.querySelectorAll("item");
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
                         var articleLink = item.querySelector('link').innerHTML;
-                        Mercury.parse('https://hidden-ocean-65163.herokuapp.com/' + articleLink).then(result => {
+
+                        var categoryEl = item.querySelector('category');
+                        if (categoryEl) {
+                            var category = categoryEl.innerHTML;
+                            categoryLinkPairs[articleLink] = category;
+                            if (!categories.includes(category)) categories.push(category);
+                        }
+                        
+                        // BUG: Using the mercury web parser with a proxy causes multiple GET errors. This is due to the proxy changing the base domain address. 
+                        Mercury.parse(corsProxy + articleLink).then(result => {
+                            // Remove the proxy url from the result
+                            result.url = result.url.replace(corsProxy, '');
+
+                            // If a category exists for this article, add it to the object. This has to be done, since mercury doesn't seem to read categories.
+                            if (categoryLinkPairs[result.url] !== undefined) { 
+                                result.category = categoryLinkPairs[result.url]; 
+                            }
+
                             parsedItems.push(result);
+
                             if (parsedItems.length == items.length) {
                                 // Sort the items by date, newest first
                                 var sortedItems = parsedItems.sort((a, b) => {
@@ -83,7 +114,8 @@ const store = new Vuex.Store({
                                 state.feedList.push({
                                     name, 
                                     url, 
-                                    items: sortedItems
+                                    items: sortedItems,
+                                    categories
                                 });
                                 localStorage.setItem('feedList', JSON.stringify(state.feedList));
                             }
@@ -96,7 +128,7 @@ const store = new Vuex.Store({
                         context.dispatch("addFeedUsingProxy", {
                             url,
                             name,
-                            proxyUrl: 'https://hidden-ocean-65163.herokuapp.com/'
+                            proxyUrl: corsProxy
                         });
                         return;
                     }

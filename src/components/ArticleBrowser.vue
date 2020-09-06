@@ -5,13 +5,14 @@
             <input type="text" class="rss-url" v-bind:value="feedURL">&nbsp;
             <font-awesome-icon class="nav-bar-icon" icon="window-close"/>
             <font-awesome-icon class="nav-bar-icon" icon="check-square"/>
+            <font-awesome-icon class="nav-bar-icon" icon="redo"/>
             <font-awesome-icon class="nav-bar-icon" icon="trash-alt"/>
         </div>
         <div class="articles" v-if="selectedFeed">
             <h1 class="feedName">{{ feedTitle }}</h1>
-            <h4 class="category">Category: Showing all</h4>
+            <h4 class="category">Category: {{ selectedCategory }}</h4>
             <Article 
-                v-for="(article, index) in selectedFeed.items" 
+                v-for="(article, index) in articles"
                 v-bind:article="article" 
                 v-bind:key="index"
                 v-bind:index="index"/>
@@ -35,9 +36,22 @@ export default {
         selectedFeed: function () {
             return this.$store.getters.selectedFeed;
         },
+        articles: function () {
+            var articles = this.$store.getters.selectedFeed.items;
+            var category = this.$store.state.selectedCategory;
+            if (!category) return articles;
+            var filteredItems = [];
+            articles.forEach(article => {
+                if (article.category == category) filteredItems.push(article);
+            });
+            return filteredItems;
+        },
         feedURL: function () {
             if (!this.$store.getters.selectedFeed) return "";
             return this.$store.getters.selectedFeed.url;
+        },
+        selectedCategory: function () {
+            return this.$store.state.selectedCategory || "Showing all";
         }
     }
 }

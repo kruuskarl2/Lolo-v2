@@ -1,6 +1,8 @@
 <template>
     <div class="article-reader" v-bind:class="{ open: articleIsSelected }">
-        <span v-if="articleIsSelected" class="article-content" v-html="articleContent"></span>
+        <div class="article-wrapper">
+            <span v-if="articleIsSelected" class="article-content" v-html="articleContent"></span>
+        </div>
     </div>
 </template>
 
@@ -29,9 +31,12 @@ export default {
     transition: 0.5s;
     flex-grow: 1;
     width: 0;
-    padding: 10px;
     overflow: auto;
     height: 98vh;
+}
+
+.article-wrapper {
+    padding: 10px;
 }
 
 .open {

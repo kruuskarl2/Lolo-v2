@@ -1,19 +1,32 @@
 <template>
-    <div class="rss-list-item" v-bind:class="{ selected: isSelected }" v-on:click="selectThisFeed">
-        <div class="feed-name">
-            <font-awesome-icon icon="book"/>&nbsp;{{ name }}
+    <div class="rss-list-item-wrapper">
+        <div class="rss-list-item" v-bind:class="{ selected: isSelected && noCategorySelected }" v-on:click="selectThisFeed">
+            <div class="feed-name">
+                <font-awesome-icon icon="book"/>&nbsp;{{ name }}
+            </div>
+            <div class="article-amount">{{ articleCount }}<font-awesome-icon icon="spinner" v-if="articleCount==undefined"/></div> 
         </div>
-        <div class="article-amount">{{ articleCount }}<font-awesome-icon icon="spinner" v-if="articleCount==undefined"/></div> 
+        <div v-if="isSelected">
+            <RssListSubitem v-for="(category, index) in categories" v-bind:key="index" v-bind:category="category"/>
+        </div>
     </div>
 </template>
 
 <script>
+import RssListSubitem from './RssListSubitem.vue';
+
 export default {
     name: 'RssListItem',
-    props: ['name', 'url', 'articleCount', 'index'],
+    props: ['name', 'url', 'articleCount', 'index', 'categories'],
+    components: {
+        RssListSubitem
+    },
     computed: {
         isSelected: function () {
-            return (this.$store.state.selectedFeedIndex == this.index);
+            return (this.$store.state.selectedFeedIndex === this.index);
+        },
+        noCategorySelected: function () {
+            return (this.$store.state.selectedCategory == null);
         }
     },
     methods: {

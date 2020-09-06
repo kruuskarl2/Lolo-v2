@@ -7,7 +7,8 @@
                 v-bind:name="feed.name" 
                 v-bind:url="feed.url" 
                 v-bind:articleCount="feed.items.length"
-                v-bind:index="index"/>
+                v-bind:index="index"
+                v-bind:categories="feed.categories"/>
         </div>
         <div v-else class="no-feeds">You haven't added any feeds yet.</div>
     </div>

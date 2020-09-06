@@ -40,9 +40,6 @@ export default {
             var date = new Date(this.article.date_published);
             return date.toDateString();
         }
-    },
-    mounted: function() {
-        console.log(this.article);
     }
 }
 </script>

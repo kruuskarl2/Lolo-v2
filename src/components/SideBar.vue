@@ -78,5 +78,6 @@ export default {
 .rss-list-container {
     height: 70%;
     overflow: auto;
+    overflow-x: hidden;
 }
 </style>

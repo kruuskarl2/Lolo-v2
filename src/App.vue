@@ -5,6 +5,7 @@
             <ArticleBrowser/>
             <ArticleReader/>
         </div>
+        <Loading/>
     </div>
 </template>
 
@@ -12,13 +13,15 @@
 import SideBar from './components/SideBar.vue'
 import ArticleBrowser from './components/ArticleBrowser.vue'
 import ArticleReader from './components/ArticleReader.vue';
+import Loading from './components/Loading.vue';
 
 export default {
     name: 'App',
     components: {
         SideBar,
         ArticleBrowser,
-        ArticleReader
+        ArticleReader,
+        Loading
     }
 }
 </script>

@@ -25,7 +25,9 @@ const store = new Vuex.Store({
       feedList: [],
       selectedFeedIndex: 0,
       selectedArticleIndex: null,
-      selectedCategory: null
+      selectedCategory: null,
+      isLoading: false,
+      loadingMessage: ''
     },
     mutations: {
         selectFeed(state, { index }) {
@@ -56,6 +58,15 @@ const store = new Vuex.Store({
             state.selectedFeedIndex = 0;
             state.selectedArticleIndex = null;
             state.selectedCategory = null;
+            localStorage.setItem('feedList', JSON.stringify(state.feedList));
+        },
+        startLoading(state, { message }) {
+            state.isLoading = true;
+            state.loadingMessage = message;
+        },
+        stopLoading(state) {
+            state.isLoading = false;
+            state.loadingMessage = '';
         }
     },
     getters: {
@@ -72,7 +83,11 @@ const store = new Vuex.Store({
     },
     actions: {
         addFeedUsingProxy(context, { url, name="Unnamed feed", proxyUrl="", atIndex }) {
+            var message = (proxyUrl === '') ? ("Fetching feed...") : ("Fetching feed using proxy...");
+            context.commit("startLoading", { message });
+
             var state = context.state;
+
             // proxyUrl must be used to bypass CORS: https://medium.com/@dtkatz/3-ways-to-fix-the-cors-error-and-how-access-control-allow-origin-works-d97d55946d9
             fetch(proxyUrl + url)
                 .then(response => response.text())
@@ -108,6 +123,7 @@ const store = new Vuex.Store({
 
                             parsedItems.push(result);
 
+                            context.commit("startLoading", { message: ('Feed fetched. Parsing articles: ' + parsedItems.length + '/' + items.length) });
                             if (parsedItems.length == items.length) {
                                 // Sort the items by date, newest first
                                 var sortedItems = parsedItems.sort((a, b) => {
@@ -122,9 +138,10 @@ const store = new Vuex.Store({
                                     items: sortedItems,
                                     categories
                                 };
-                                if (atIndex !== undefined) state.feedList[atIndex] = newFeed;
+                                if (atIndex !== undefined) Vue.set(state.feedList, atIndex, newFeed);
                                 else state.feedList.push(newFeed);
                                 localStorage.setItem('feedList', JSON.stringify(state.feedList));
+                                context.commit("stopLoading");
                             }
                         });
                     }
@@ -141,6 +158,7 @@ const store = new Vuex.Store({
                         return;
                     }
                     console.log("Failed to parse feed: " + error);
+                    context.commit("stopLoading");
                 });
         }
     }

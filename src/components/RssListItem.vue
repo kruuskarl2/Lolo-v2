@@ -4,7 +4,7 @@
             <div class="feed-name">
                 <font-awesome-icon icon="book"/>&nbsp;{{ name }}
             </div>
-            <div class="article-amount">{{ articleCount }}<font-awesome-icon icon="spinner" v-if="articleCount==undefined"/></div> 
+            <div class="article-amount">{{ articleCount }}</div> 
         </div>
         <div v-if="isSelected">
             <RssListSubitem v-for="(category, index) in categories" v-bind:key="index" v-bind:category="category"/>
@@ -57,6 +57,9 @@ export default {
 .feed-name {
     flex-grow: 15;
     margin: 0 6px;
+    max-width: 260px;
+    height: 18px;
+    overflow: hidden;
 }
 
 .article-amount {
@@ -68,18 +71,4 @@ export default {
     border-radius: 5px;
     margin: 0 5px;
 }
-
-.fa-spinner {
-    animation: rotation 2s infinite linear;
-}
-
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-
 </style>

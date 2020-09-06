@@ -2,9 +2,20 @@
     <div class="article-browser">
         <div class="nav-bar">
             <font-awesome-icon class="nav-bar-icon" icon="rss"/>&nbsp;
-            <input type="text" class="rss-url" v-bind:value="feedURL">&nbsp;
-            <font-awesome-icon class="nav-bar-icon" icon="window-close"/>
-            <font-awesome-icon class="nav-bar-icon" icon="check-square"/>
+            <input 
+                type="text" 
+                class="rss-url" 
+                v-bind:value="feedURL" 
+                v-on:focus="startChangingURL" 
+                v-on:blur="stopChangingURL"
+                ref="feedURL">
+            &nbsp;
+            <font-awesome-icon v-show="changingFeed" class="nav-bar-icon" icon="window-close"/>
+            <font-awesome-icon 
+                v-show="changingFeed" 
+                class="nav-bar-icon" 
+                icon="check-square"
+                v-on:click="confirmURLChange"/>
             <font-awesome-icon class="nav-bar-icon" icon="redo" v-on:click="refresh"/>
             <font-awesome-icon class="nav-bar-icon" icon="trash-alt" v-on:click="removeFeed"/>
         </div>
@@ -29,6 +40,11 @@ export default {
     components: {
         Article
     },
+    data: function () {
+        return {
+            changingFeed: false
+        }
+    },
     methods: {
         refresh: function() {
             var feed = this.$store.getters.selectedFeed;
@@ -41,6 +57,21 @@ export default {
             var feeds = this.$store.state.feedList;
             var index = feeds.findIndex((arrFeed) => { return arrFeed === feed; });
             this.$store.commit('removeFeed', { index });
+        },
+        startChangingURL: function () {
+            this.changingFeed = true;
+        },
+        stopChangingURL: function () {
+            var context = this;
+            // Buttons get hidden too soon after blur event
+            setTimeout(function(){ context.changingFeed = false; }, 100);
+        },
+        confirmURLChange: function () {
+            var newURL = this.$refs.feedURL.value;
+            var feed = this.$store.getters.selectedFeed;
+            var feeds = this.$store.state.feedList;
+            var index = feeds.findIndex((arrFeed) => { return arrFeed === feed; });
+            this.$store.dispatch('addFeedUsingProxy', { url: newURL, name: feed.name, atIndex: index});
         }
     },
     computed: {
@@ -119,6 +150,12 @@ export default {
     margin: 0 0 0 10px;
 }
 .fa-redo:hover {
+    color: var(--accent-color);
+}
+.fa-window-close:hover {
+    color: var(--error-color);
+}
+.fa-check-square:hover {
     color: var(--accent-color);
 }
 </style>

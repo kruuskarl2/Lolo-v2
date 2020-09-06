@@ -4,6 +4,9 @@
         <div class="text-content">
             <h4 class="title">{{ articleTitle || "Untitled Article" }}</h4>
             <p class="desc">{{ articleDescription }}</p>
+            <div class="article-details">
+                <p class="date">Date: {{ articleDate }}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -31,6 +34,11 @@ export default {
         },
         isSelected() {
             return (this.index == this.$store.state.selectedArticleIndex);
+        },
+        articleDate: function() {
+            if (!this.article.date_published) return "Unknown";
+            var date = new Date(this.article.date_published);
+            return date.toDateString();
         }
     },
     mounted: function() {
@@ -51,9 +59,11 @@ export default {
 }
 .article:hover {
     background-color: var(--accent-color);
+    color: var(--light-bgcolor);
 }
 .selected {
     background-color: var(--accent-color);
+    color: var(--light-bgcolor);
 }
 .image {
     height: 100px;
@@ -74,5 +84,8 @@ img {
 }
 .fa-rss {
     font-size: 100px;
+}
+.article-details {
+    font-size: 13px;
 }
 </style>

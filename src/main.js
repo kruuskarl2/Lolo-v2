@@ -73,11 +73,17 @@ const store = new Vuex.Store({
                         Mercury.parse('https://hidden-ocean-65163.herokuapp.com/' + articleLink).then(result => {
                             parsedItems.push(result);
                             if (parsedItems.length == items.length) {
-                                // When all the articles have been parsed, add the new feed
+                                // Sort the items by date, newest first
+                                var sortedItems = parsedItems.sort((a, b) => {
+                                    var aDate = Date.parse(a.date_published || 0);
+                                    var bDate = Date.parse(b.date_published || 0);
+                                    return bDate - aDate;
+                                });
+                                // When all the articles have been parsed and sorted, add the new feed
                                 state.feedList.push({
                                     name, 
                                     url, 
-                                    items: parsedItems
+                                    items: sortedItems
                                 });
                                 localStorage.setItem('feedList', JSON.stringify(state.feedList));
                             }

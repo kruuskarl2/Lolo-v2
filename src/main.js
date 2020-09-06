@@ -44,13 +44,18 @@ const store = new Vuex.Store({
             if (storedFeedListStr) {
                 var storedFeedList = JSON.parse(storedFeedListStr);
                 state.feedList = storedFeedList;
-                console.log(storedFeedList);
             }
         },
         selectCategory(state, { category }) {
             if (category == undefined) return;
             state.selectedCategory = category;
             state.selectedArticleIndex = null;
+        },
+        removeFeed(state, { index }) {
+            state.feedList.splice(index, 1);
+            state.selectedFeedIndex = 0;
+            state.selectedArticleIndex = null;
+            state.selectedCategory = null;
         }
     },
     getters: {
@@ -68,7 +73,6 @@ const store = new Vuex.Store({
     actions: {
         addFeedUsingProxy(context, { url, name="Unnamed feed", proxyUrl="", atIndex }) {
             var state = context.state;
-            console.log(atIndex);
             // proxyUrl must be used to bypass CORS: https://medium.com/@dtkatz/3-ways-to-fix-the-cors-error-and-how-access-control-allow-origin-works-d97d55946d9
             fetch(proxyUrl + url)
                 .then(response => response.text())

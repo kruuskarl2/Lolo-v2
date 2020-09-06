@@ -6,7 +6,7 @@
             <font-awesome-icon class="nav-bar-icon" icon="window-close"/>
             <font-awesome-icon class="nav-bar-icon" icon="check-square"/>
             <font-awesome-icon class="nav-bar-icon" icon="redo" v-on:click="refresh"/>
-            <font-awesome-icon class="nav-bar-icon" icon="trash-alt"/>
+            <font-awesome-icon class="nav-bar-icon" icon="trash-alt" v-on:click="removeFeed"/>
         </div>
         <div class="articles" v-if="selectedFeed">
             <h1 class="feedName">{{ feedTitle }}</h1>
@@ -34,8 +34,13 @@ export default {
             var feed = this.$store.getters.selectedFeed;
             var feeds = this.$store.state.feedList;
             var index = feeds.findIndex((arrFeed) => { return arrFeed === feed; });
-            console.log(index);
             this.$store.dispatch('addFeedUsingProxy', { url: feed.url, name: feed.name, atIndex: index});
+        },
+        removeFeed: function() {
+            var feed = this.$store.getters.selectedFeed;
+            var feeds = this.$store.state.feedList;
+            var index = feeds.findIndex((arrFeed) => { return arrFeed === feed; });
+            this.$store.commit('removeFeed', { index });
         }
     },
     computed: {
